@@ -1,18 +1,16 @@
-from datetime import datetime
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Index
+from sqlalchemy.sql import func
+from app.db.database import Base
 
-class Event:
-    def __init__(self, id: int, camera_id: int, event_type: str, description: str | None = None):
-        self.id = id
-        self.camera_id = camera_id
-        self.timestamp = datetime.now()
-        self.event_type = event_type
-        self.description = description
+class Event(Base):
+    __tablename__ = "events"
+
+    id = Column(Integer, primary_key=True)
+    camera_id = Column(Integer, ForeignKey("cameras.id"), nullable=False)
+    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+    event_type = Column(String(100), nullable=False)
+    description = Column(String(255))
     
-    def to_dict(self) -> dict:
-        return {
-            "id": self.id,
-            "camera_id": self.camera_id,
-            "timestamp": self.timestamp.isoformat(),
-            "event_type": self.event_type,
-            "description": self.description
-        }
+    __table_args__ = (
+        Index("idx_camera_id", "camera_id"),
+    )
