@@ -7,7 +7,7 @@ class Event(Base):
 
     id = Column(Integer, primary_key=True)
     camera_id = Column(Integer, ForeignKey("cameras.id"), nullable=False)
-    timestamp = Column(DateTime(timezone=True), server_default=func.now())
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
     event_type = Column(String(100), nullable=False)
     description = Column(String(255))
     
